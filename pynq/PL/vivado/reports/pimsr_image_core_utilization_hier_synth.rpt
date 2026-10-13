@@ -1,0 +1,43 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2022.2 (win64) Build 3671981 Fri Oct 14 05:00:03 MDT 2022
+| Date         : Mon Jun 22 18:47:21 2026
+| Host         : <redacted>
+| Command      : report_utilization -hierarchical -hierarchical_depth 5 -file reports/pimsr_image_core_utilization_hier_synth.rpt
+| Design       : pimsr_image_core
+| Device       : xc7z020clg400-1
+| Speed File   : -1
+| Design State : Synthesized
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Utilization Design Information
+
+Table of Contents
+-----------------
+1. Utilization by Hierarchy
+
+1. Utilization by Hierarchy
+---------------------------
+
++----------------------+-----------------------------------------+------------+------------+---------+------+------+--------+--------+------------+
+|       Instance       |                  Module                 | Total LUTs | Logic LUTs | LUTRAMs | SRLs |  FFs | RAMB36 | RAMB18 | DSP Blocks |
++----------------------+-----------------------------------------+------------+------------+---------+------+------+--------+--------+------------+
+| pimsr_image_core     |                                   (top) |       1781 |       1781 |       0 |    0 | 1960 |     16 |      0 |         36 |
+|   (pimsr_image_core) |                                   (top) |        217 |        217 |       0 |    0 |  182 |      0 |      0 |          0 |
+|   pixel_core_i       |                    pimsr_lut_pixel_core |       1564 |       1564 |       0 |    0 | 1778 |     16 |      0 |         36 |
+|     (pixel_core_i)   |                    pimsr_lut_pixel_core |         29 |         29 |       0 |    0 |   34 |      0 |      0 |          0 |
+|     bot_i            | pimsr_branch_interp_seq__parameterized2 |        519 |        519 |       0 |    0 |  436 |      4 |      0 |          9 |
+|       (bot_i)        | pimsr_branch_interp_seq__parameterized2 |        519 |        519 |       0 |    0 |  436 |      0 |      0 |          9 |
+|       rom_i          |   pimsr_sampled_lut_rom__parameterized2 |          0 |          0 |       0 |    0 |    0 |      4 |      0 |          0 |
+|     left_i           |                 pimsr_branch_interp_seq |        330 |        330 |       0 |    0 |  436 |      4 |      0 |          9 |
+|       (left_i)       |                 pimsr_branch_interp_seq |        330 |        330 |       0 |    0 |  436 |      0 |      0 |          9 |
+|       rom_i          |                   pimsr_sampled_lut_rom |          0 |          0 |       0 |    0 |    0 |      4 |      0 |          0 |
+|     right_i          | pimsr_branch_interp_seq__parameterized0 |        344 |        344 |       0 |    0 |  436 |      4 |      0 |          9 |
+|       (right_i)      | pimsr_branch_interp_seq__parameterized0 |        344 |        344 |       0 |    0 |  436 |      0 |      0 |          9 |
+|       rom_i          |   pimsr_sampled_lut_rom__parameterized0 |          0 |          0 |       0 |    0 |    0 |      4 |      0 |          0 |
+|     top_i            | pimsr_branch_interp_seq__parameterized1 |        342 |        342 |       0 |    0 |  436 |      4 |      0 |          9 |
+|       (top_i)        | pimsr_branch_interp_seq__parameterized1 |        342 |        342 |       0 |    0 |  436 |      0 |      0 |          9 |
+|       rom_i          |   pimsr_sampled_lut_rom__parameterized1 |          0 |          0 |       0 |    0 |    0 |      4 |      0 |          0 |
++----------------------+-----------------------------------------+------------+------------+---------+------+------+--------+--------+------------+
+
+

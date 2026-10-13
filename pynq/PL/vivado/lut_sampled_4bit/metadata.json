@@ -1,0 +1,19 @@
+{
+  "source_full_lut_dir": "lut_out",
+  "input_bits": 4,
+  "address": "addr = {p0[7:8-input_bits], p1[7:8-input_bits], p2[7:8-input_bits]}",
+  "depth_per_branch": 4096,
+  "word_width_bits": 32,
+  "word_order": {
+    "[31:24]": "top_left signed int8",
+    "[23:16]": "top_right signed int8",
+    "[15:8]": "bottom_left signed int8",
+    "[7:0]": "bottom_right signed int8"
+  },
+  "sample_level": "sample = msb_index << (8 - input_bits)",
+  "edge_policy": "if msb_index is max, interpolation fraction is forced to zero",
+  "formats": [
+    "mem",
+    "coe"
+  ]
+}

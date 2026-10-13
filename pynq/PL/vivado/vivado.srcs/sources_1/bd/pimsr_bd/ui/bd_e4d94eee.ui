@@ -1,0 +1,51 @@
+{
+   "ActiveEmotionalView":"Default View",
+   "Default View_ScaleFactor":"0.717936",
+   "Default View_TopLeft":"-241,-639",
+   "ExpandedHierarchyInLayout":"",
+   "guistr":"# # String gsaved with Nlview 7.0r6  2020-01-29 bk=1.5227 VDI=41 GEI=36 GUI=JA:10.0 non-TLS
+#  -string -flagsOSRD
+preplace port DDR -pg 1 -lvl 4 -x 1440 -y -190 -defaultsOSRD
+preplace port FIXED_IO -pg 1 -lvl 4 -x 1440 -y -140 -defaultsOSRD
+preplace inst processing_system7_0 -pg 1 -lvl 1 -x 420 -y -120 -defaultsOSRD
+preplace inst ps7_0_axi_periph -pg 1 -lvl 2 -x 910 -y 110 -defaultsOSRD
+preplace inst rst_ps7_0_100M -pg 1 -lvl 2 -x 910 -y 410 -defaultsOSRD
+preplace inst lr_bram -pg 1 -lvl 2 -x 910 -y -560 -defaultsOSRD
+preplace inst hr_bram -pg 1 -lvl 2 -x 910 -y -300 -defaultsOSRD
+preplace inst lr_bram_BRAM_PORTA -pg 1 -lvl 3 -x 1270 -y -490 -defaultsOSRD
+preplace inst hr_bram_BRAM_PORTA -pg 1 -lvl 3 -x 1270 -y -350 -defaultsOSRD
+preplace inst pimsr_axi_ip_0 -pg 1 -lvl 1 -x 420 -y -380 -defaultsOSRD
+preplace netloc hr_bram_doutb 1 0 2 20 -560 610
+preplace netloc lr_bram_doutb 1 0 2 30 -550 710J
+preplace netloc pimsr_axi_ip_0_hr_bram_addr 1 1 1 690 -340n
+preplace netloc pimsr_axi_ip_0_hr_bram_clk 1 1 1 700 -370n
+preplace netloc pimsr_axi_ip_0_hr_bram_din 1 1 1 700 -300n
+preplace netloc pimsr_axi_ip_0_hr_bram_en 1 1 1 670 -330n
+preplace netloc pimsr_axi_ip_0_hr_bram_rst 1 1 1 680 -350n
+preplace netloc pimsr_axi_ip_0_hr_bram_we 1 1 1 620 -310n
+preplace netloc pimsr_axi_ip_0_lr_bram_addr 1 1 1 620 -600n
+preplace netloc pimsr_axi_ip_0_lr_bram_clk 1 1 1 600 -580n
+preplace netloc pimsr_axi_ip_0_lr_bram_din 1 1 1 650 -560n
+preplace netloc pimsr_axi_ip_0_lr_bram_en 1 1 1 630 -520n
+preplace netloc pimsr_axi_ip_0_lr_bram_rst 1 1 1 640 -500n
+preplace netloc pimsr_axi_ip_0_lr_bram_we 1 1 1 710 -480n
+preplace netloc processing_system7_0_FCLK_CLK0 1 0 3 0 -570 660 -700 1100
+preplace netloc processing_system7_0_FCLK_RESET0_N 1 1 1 610 -70n
+preplace netloc rst_ps7_0_100M_peripheral_aresetn 1 0 3 30 50 630J 280 1110
+preplace netloc hr_bram_BRAM_PORTA_BRAM_PORTA 1 1 3 710 -150 N -150 1400
+preplace netloc lr_bram_BRAM_PORTA_BRAM_PORTA 1 1 3 710 -710 N -710 1400
+preplace netloc processing_system7_0_DDR 1 1 3 610J -160 1100 -190 N
+preplace netloc processing_system7_0_FIXED_IO 1 1 3 610J -140 N -140 N
+preplace netloc processing_system7_0_M_AXI_GP0 1 1 1 630J -110n
+preplace netloc ps7_0_axi_periph_M00_AXI 1 0 3 10 270 NJ 270 1080J
+preplace netloc ps7_0_axi_periph_M01_AXI 1 2 1 1090 -510n
+preplace netloc ps7_0_axi_periph_M02_AXI 1 2 1 1120 -370n
+levelinfo -pg 1 -20 420 910 1270 1440
+pagesize -pg 1 -db -bbox -sgen -20 -820 1550 730
+"
+}
+{
+   "da_axi4_cnt":"1",
+   "da_bram_cntlr_cnt":"2",
+   "da_ps7_cnt":"1"
+}

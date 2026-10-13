@@ -1,0 +1,19 @@
+{
+  "checkpoint": "checkpoints\\pimsr_final_swa.pth",
+  "branches": [
+    "left",
+    "right",
+    "top",
+    "bot"
+  ],
+  "address_order": "addr = (p0 << 16) | (p1 << 8) | p2",
+  "entry_dtype": "int8",
+  "entry_channels": [
+    "top_left",
+    "top_right",
+    "bottom_left",
+    "bottom_right"
+  ],
+  "depth": 16777216,
+  "entry_width": 4
+}
