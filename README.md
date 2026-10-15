@@ -44,6 +44,24 @@
 - This is a single-image sanity check of the complete PS + PL path, not a standard benchmark.
 - Test image: a screenshot from the anime *Kaguya-sama: Love Is War* (© Aka Akasaka / Shueisha, Kaguya-sama Production Committee), used here only as a non-commercial research demonstration at 90 × 90 pixels. All rights belong to the copyright holders; it will be removed on request.
 
+### Standard benchmarks (×2, Y channel)
+
+`model/eval_benchmarks.py`; Y-channel PSNR (dB), shave 2 px, mean over images, LR = each dataset's bicubic ×2 LR.
+
+| Dataset | Images | Bicubic | Float (PyTorch) | QAT int8 (PyTorch) | **Verilog (RTL sim)** |
+|---|---:|---:|---:|---:|---:|
+| Set5 | 5 | 32.32 | 34.31 | 34.26 | **32.87** |
+| Set14 | 14 | 28.57 | 29.70 | 29.68 | **29.02** |
+| BSD100 | 100 | 26.09 | 25.88 | 25.87 | **25.59** |
+| Urban100 | 100 | 25.54 | 27.20 | 27.18 | **26.69** |
+
+- The **Verilog** column is the project's own RTL (`pimsr_image_core`, unmodified) simulated in ModelSim on every image (219 images, about 24 M LR pixels), not a Python re-implementation. Only `IMG_W`, `IMG_H`, `LR_ADDR_WIDTH` and `HR_ADDR_WIDTH` are overridden per image so that images larger than the 45 × 45 on-chip buffers fit. The testbench is `pynq/PL/vivado/tb/tb_pimsr_image_core_bench.v`.
+- All 219 simulated HR images are bit-identical to a vectorised numpy copy of the datapath, which in turn matches the scalar golden model used for the RTL testbenches.
+- QAT int8 costs only 0.02 to 0.05 dB over float; most of the loss comes from the 4-bit sampled LUT with tetrahedral interpolation (about 0.7 to 1.5 dB vs. float).
+- On BSD100 both the float model and the sampled LUT are **below bicubic**.
+- Y is taken with PIL's `YCbCr` (as in `eval_all.py`), not MATLAB's 16 to 235 range, so absolute numbers are lower than published ones (e.g. bicubic Set5 is 32.32 here vs. 33.66 in papers). Compare methods with each other, not with the literature.
+- Manga109 is not included: its licence does not allow public download. Place it in the same folder layout to evaluate it. Per-image results are in `model/benchmark_per_image.csv`.
+
 ### FPGA resources (`pimsr_image_core`, synthesis, 100 MHz)
 
 | Resource | Used | Available | Util. |
@@ -171,6 +189,7 @@ sequenceDiagram
 | Image core | Full 4 × 4 → 8 × 8 image incl. border replication and address generation | `tb/gen_image_core_vectors.py`, `tb_pimsr_image_core.v` |
 | Board | Same 4 × 4 golden image through PS + PL | `pynq/PS/pimsr_overlay_smoke.ipynb` |
 | Board vs. software | 45 × 45 → 90 × 90 FPGA output identical to the Python sampled-LUT simulator | `pynq/PS/pimsr_compare_origin_45_90.ipynb` |
+| Benchmarks | 219 benchmark images through the RTL in ModelSim, bit-identical to the numpy datapath model | `model/eval_benchmarks.py`, `tb/tb_pimsr_image_core_bench.v` |
 
 ---
 
@@ -182,7 +201,8 @@ sequenceDiagram
 | Image size fixed at synthesis (`IMG_W`, `IMG_H`) | Wire the WIDTH/HEIGHT registers into the core |
 | 8 KiB on-chip LR/HR buffers (max 45 × 45 → 90 × 90) | AXI DMA + DDR, or line-buffer streaming |
 | Only Y is super-resolved | Chroma uses nearest neighbour; could reuse the Y result for guidance |
-| No standard benchmark numbers yet | Report Set5 / Set14 / Urban100 for float, QAT, exact LUT, and sampled LUT |
+| Sampled LUT is 0.7 to 1.5 dB below float on benchmarks, and below bicubic on BSD100 | Try 5-bit sampling, per-branch bit-widths (`eval_lut_compression.py`), or sampling-aware training |
+| Benchmarks cover Set5 / Set14 / BSD100 / Urban100 only; no exact 8-bit LUT row | Add Manga109 and the exact LUT to the table |
 
 ---
 
@@ -191,6 +211,8 @@ sequenceDiagram
 ```
 .
 ├── model/
+│   ├── eval_benchmarks.py        # x2 benchmark: bicubic / float / QAT / Verilog (ModelSim)
+│   ├── benchmark_per_image.csv   # per-image PSNR from eval_benchmarks.py
 │   ├── torch/                    # model.py, train.py, eval_all.py, prepare_benchmarks.py, checkpoints/
 │   └── LUT/                      # pimsr_lut.py, export_sampled_lut.py, eval_lut_*.py, LUT_README.md
 └── pynq/
@@ -231,7 +253,17 @@ python export_sampled_lut.py --full-lut-dir lut_out --output-dir ../../pynq/PL/v
 
 On PowerShell, set `$env:PYTHONPATH="../torch"` first. The exact LUTs (~256 MiB) are not included in the repository.
 
-**3. Simulate and synthesize**
+**3. Benchmark (bicubic, float, QAT, Verilog RTL simulation)**
+
+Needs ModelSim (`vlib`, `vlog`, `vsim` on `PATH`). Download the HR and LR ×2 tarballs of Set5, Set14, BSD100 and Urban100 (for example from the `eugenesiow/<name>` datasets on HuggingFace) and extract them to `model/torch/datasets/_raw/<name>/HR/<name>_HR` and `.../LR_x2/<name>_LR_x2`.
+
+```bash
+cd model
+python eval_benchmarks.py --selfcheck                   # all four datasets, one vsim per image in parallel
+python eval_benchmarks.py --datasets Set5 --sim-jobs 4  # quick run
+```
+
+**4. Simulate and synthesize**
 
 Open `pynq/PL/vivado/vivado.xpr`, then in the Tcl console:
 
@@ -243,7 +275,7 @@ source ./run_pimsr_image_synth_check.tcl
 
 Testbenches open their `.mem` files by name; the `add_*.tcl` scripts add those files to the project so xsim copies them into its run directory. Vivado's generated folders (`vivado.runs`, `vivado.cache`, …) are not included; Vivado recreates them from the block design and IP `.xci` files. Run **Generate Block Design** before **Generate Bitstream**.
 
-**4. Run on the board**
+**5. Run on the board**
 
 Copy `pynq/PS/pimsr.bit`, `pimsr.hwh` and a notebook into one folder on the PYNQ-Z2.
 
